@@ -1,0 +1,10 @@
+/** @format */
+
+.main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	min-height: 100vh;
+}
