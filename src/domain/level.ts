@@ -1,6 +1,6 @@
 /** @format */
 
-import Card, { State } from "./card";
+import Card, { State } from "dm/card";
 
 export default class Level {
 	cards: Card[];

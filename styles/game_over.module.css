@@ -1,0 +1,28 @@
+/** @format */
+
+.place {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #2b2b2b7a;
+	filter: blur(5);
+	z-index: 9;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.btn {
+	width: 150px;
+	height: 50px;
+	font-size: 20px;
+	font-weight: 900;
+	background-color: silver;
+	color: black;
+	box-sizing: border-box;
+	border: 3px solid #7c7979;
+	border-radius: 10px;
+}

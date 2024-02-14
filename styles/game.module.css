@@ -1,0 +1,18 @@
+/** @format */
+
+.gameContainer {
+	position: relative;
+}
+
+.containerCards {
+	margin-top: 40px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 20px;
+	width: 100%;
+	height: 100%;
+	border: 1px solid blue;
+	padding: 20px;
+	perspective: 10000px;
+}
