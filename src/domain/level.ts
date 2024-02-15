@@ -1,6 +1,13 @@
 /** @format */
 
-import Card, { State } from "dm/card";
+import Card from "dm/card";
+
+export enum TypeCards {
+	yugioh = "yugioh",
+	pokemon = "pokemon",
+	digimon = "digimon",
+	all = "all"
+}
 
 export default class Level {
 	cards: Card[];
@@ -9,14 +16,14 @@ export default class Level {
 	private readonly mult: number = 2;
 	private readonly count: number = 6;
 
-	constructor() {
+	constructor(level: number = 0) {
 		this.cards = [];
-		this.level = 0;
-		this.GetCards();
+		this.level = level;
 		this.time = (10 * 6) / 2 - 10 * 6 * 0.2;
+		this.GetCards();
 	}
 
-	GetCards() {
+	private GetCards() {
 		const array: Card = [];
 
 		for (let i = 0; i < this.count + this.level * this.mult; i++) {

@@ -1,7 +1,9 @@
 /** @format */
 
 .timer {
-	font-size: 11px;
+	font-size: 18px;
 	white-space: nowrap;
+	font-weight: 900;
 	padding-right: 10px;
+	color: white;
 }

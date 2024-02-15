@@ -1,55 +1,59 @@
 /** @format */
 import React, { useState, useEffect } from "react";
-import Card, { State } from "dm/card";
+import Card, { CardState } from "dm/card";
+import { GameState } from "cp/game";
+import Lever from "dm/lever";
+import CardSelector from "dm/card_selector";
 import Styles from "st/draw_card.module.css";
 
 export default function DrawCard({
+	level,
 	card,
-	find
+	setLevel,
+	setGameState
 }: {
+	level: Level;
 	card: Card;
-	find: (cardId: string, setState: () => void) => void;
+	setLevel: (callback: (prev: Level) => Level) => void;
+	setGameState: (value: GameState) => void;
 }) {
-	const [_card, setCard] = useState(card);
+	const [state, setState] = useState<CardState>(card.state);
 
 	useEffect(() => {
-		if (_card.state == State.show) {
-			new Promise((resolve, reject) => {
-				setTimeout(() => {
-					find(card.id, () => {
-						setCard((prev: Card) => {
-							const newCard: Card = new Card(prev.id, prev.name, prev.img_url);
-							newCard.hiddenCard();
-							return newCard;
-						});
-					});
-				}, 500);
-			});
+		if (state == CardState.show) {
+			const timeoutId = setTimeout(() => {
+				CardSelector(card.id, level, setLevel, setGameState, () => {
+					setState(CardState.hidden);
+				});
+			}, 500);
+
+			return () => {
+				clearTimeout(timeoutId);
+			};
 		}
-	}, [_card]);
+	}, [state]);
 
 	const _styles: React.CSSProperties = {
-		transform: `rotateY(${_card.state === State.show ? "180" : "0"}deg)`
+		transform: `rotateY(${state === CardState.show ? "180" : "0"}deg)`
 	};
+
+	function handleClick() {
+		setState(CardState.show);
+	}
 
 	return (
 		<div
+			key={card.id}
 			style={_styles}
 			className={`${Styles.card} gold_metal`}
-			onClick={() => {
-				setCard((prev: Card) => {
-					const newCard: Card = new Card(prev.id, prev.name, prev.img_url);
-					newCard.showCard();
-					return newCard;
-				});
-			}}>
+			onClick={handleClick}>
 			<img
-				loading
+				loading='lazy'
 				src={card.img_url}
 				className={Styles.img}
+				alt={card.name}
 				style={{
-					opacity: `${_card.state === State.show ? "1" : "0"}`,
-					
+					opacity: `${state === CardState.show ? "1" : "0"}`
 				}}
 			/>
 		</div>

@@ -18,17 +18,13 @@
 }
 
 .title {
-	color: red;
+	color: blue;
 	font-size: 50px;
 	font-weight: 900;
 	padding: 5px;
 	margin-block-end: 10px;
-	text-shadow: 3px 0 4px rgb(240,202,166);
+	text-shadow: 3px 0 4px rgb(237, 240, 166);
 	box-shadow:
 		0 0 20px 1px black,
 		inset 0 0 50px 10px black;
-}
-
-.btn {
-	border-color: rgb(188, 27, 27);
 }

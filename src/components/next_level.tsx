@@ -2,9 +2,9 @@
 
 import { GameState } from "cp/game";
 import Button from "cp/button";
-import Styles from "st/start.module.css";
+import Styles from "st/nextlevel.module.css";
 
-export default function Start({
+export default function NextLevel({
 	setGameState
 }: {
 	setGameState: (value: GameState) => void;
@@ -15,7 +15,8 @@ export default function Start({
 
 	return (
 		<div className={Styles.place}>
-			<Button onClick={handleClick} title="Start"/>
+			<span className={Styles.title}>Next Level</span>
+			<Button onClick={handleClick} title="Start" />
 		</div>
 	);
 }

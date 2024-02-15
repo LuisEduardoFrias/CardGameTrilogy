@@ -1,35 +1,40 @@
 /** @format */
 
-import { useState } from "react";
-import { State } from "cp/game";
+import { useState, useEffect } from "react";
+import { GameState } from "cp/game";
 import Styles from "st/timer.module.css";
 
 export default function Timer({
 	time,
-	state,
-	setState
+	gameState,
+	setGameState
 }: {
 	time: number;
-	state: State;
-	setState: (value: boolean) => void;
+	gameState: GameState;
+	setGameState: (value: GameState) => void;
 }) {
 	const [timer, setTimer] = useState(time);
 
-	new Promise((resolve, reject) => {
-		setTimeout(() => {
-			if (timer <= 0) {
-				setState(State.gameover);
-				setTimer(time);
-			} else if (state == State.start) {
-				setTimer(timer - 1);
-			}
-		}, 1000);
-	});
+	useEffect(() => {
+		let interval: NodeJS.Timeout;
 
-	return (
-		<span className={timer}>
-			{"Time: "}
-			{timer}
-		</span>
-	);
+		if (gameState === GameState.start) {
+			interval = setInterval(() => {
+				if (timer <= 0) {
+					setGameState(GameState.gameover);
+					setTimer(time);
+				} else {
+					setTimer(timer - 1);
+				}
+			}, 1000);
+		}
+
+		return () => clearInterval(interval);
+	}, [timer, gameState]);
+
+	useEffect(() => {
+		setTimer(time);
+	}, [gameState]);
+
+	return <span className={Styles.timer}>{`Time: ${timer} seconds`}</span>;
 }

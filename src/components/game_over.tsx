@@ -1,23 +1,26 @@
 /** @format */
 
-import { State } from "cp/game";
+import { GameState } from "cp/game";
+import Button from "cp/button";
 import Styles from "st/game_over.module.css";
 
 export default function GameOver({
-	setState
+	setGameState
 }: {
-	setState: (value: boolean) => void;
+	setGameState: (value: GameState) => void;
 }) {
 	function handleClick() {
-		setState(State.start);
+		setGameState(GameState.start);
 	}
 
 	return (
 		<div className={Styles.place}>
-			<span>Game Over</span>
-			<button className={`${Styles.btn} btn silver_metal`} onClick={handleClick}>
-				Restart
-			</button>
+			<span className={Styles.title}>Game Over</span>
+			<Button
+				className={`${Styles.btn} btn red_metal`}
+				onClick={handleClick}
+				title='Restart'
+			/>
 		</div>
 	);
 }

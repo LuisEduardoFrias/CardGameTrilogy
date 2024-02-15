@@ -1,28 +1,20 @@
 /** @format */
 
-export enum State {
+export enum CardState {
 	show,
 	hidden
 }
 
 export default class Card {
-	id: string;
-	name: string;
-	img_url: string;
-	state: State;
+	readonly id: string;
+	readonly name: string;
+	readonly img_url: string;
+	readonly state: CardState;
 	//
 	constructor(id: string, name: string, img_url: string) {
 		this.id = id;
 		this.name = name;
 		this.img_url = img_url;
-		this.state = State.hidden;
-	}
-
-	showCard() {
-		this.state = State.show;
-	}
-
-	hiddenCard() {
-		this.state = State.hidden;
+		this.state = CardState.hidden;
 	}
 }

@@ -6,72 +6,70 @@ import GameOver from "cp/game_over";
 import Start from "cp/start";
 import Timer from "cp/timer";
 import Level from "dm/level";
+import NextLevel from "cp/next_level";
+import initializeLevel from "dm/initialize_level";
+import CardSelector from "dm/card_select";
+
 import Styles from "st/game.module.css";
 
-export enum State {
-	start,
-	stop,
-	gameover
+export enum GameState {
+	start = "start",
+	stop = "stop",
+	gameover = "gameover",
+	nextlevel = "nextlevel"
 }
 
-type _Find = {
-	key: string;
-	value: boolean;
-	setState: (value: boolean) => void;
-};
-
 export default function Game() {
+	//
+	const [gameState, setGameState] = useState<GameState>(GameState.stop);
+
 	const [level, setLevel] = useState(new Level());
-	const [state, setState] = useState(State.stop);
-	const [find, setFind] = useState([]);
-
-	function Find(cardId: string, setState: () => void) {
-		setFind((prev: _Find[]) => {
-			const indexkey = prev.findIndex((find: _Find) => find.key === cardId);
-
-			const indexValue = prev.findIndex((find: _Find) => find.value === false);
-
-			if (indexkey >= 0 || indexValue >= 0) {
-				if (prev[indexkey]?.key === cardId) {
-					prev[indexkey].value = true;
-				} else {
-					prev[indexValue].setState();
-					setState();
-					prev.splice(indexValue, 1);
-				}
-			} else {
-				prev.push({ key: cardId, value: false, setState });
-			}
-
-			return [...prev];
-		});
-
-		level.cards.length;
-	}
 
 	useEffect(() => {
-		const duplicCards: Card[] = level.cards.concat(level.cards.slice());
-
-		const newArray: Card[] = [];
-
-		for (let i = 0; i < duplicCards.length; i++) {
-			let randomIndex = Math.floor(Math.random() * duplicCards.length);
-			newArray.splice(randomIndex, 0, duplicCards[i]);
+		if (gameState == GameState.nextlevel) {
+			alert("useEffect: " + JSON.stringify(level, null, 2));
+			initializeLevel(setLevel, level);
 		}
+	}, [level.level]);
 
-		setLevel(prev => {
-			return { ...prev, cards: newArray };
-		});
+	useEffect(() => {
+		initializeLevel(setLevel, level);
 	}, []);
 
 	return (
 		<div className={Styles.gameContainer}>
-			<Timer time={level.time} state={state} setState={setState} />
-			{state == State.stop && <Start setState={setState} />}
-			{state == State.gameover && <GameOver setState={setState} />}
-			<div className={Styles.containerCards}>
+			<header className={`${Styles.header} ligth_border`}>
+				<span className={`${Styles.title} blue_metal_text`}>
+					Memory Card Game Trilogy
+				</span>
+				<div className={Styles.timerLevel}>
+					<span className={Styles.textLevel}>{`Level: ${
+						level.level + 1
+					}`}</span>
+					<Timer
+						time={level.time}
+						gameState={gameState}
+						setGameState={setGameState}
+					/>
+				</div>
+			</header>
+			{gameState == GameState.stop && <Start setGameState={setGameState} />}
+			{gameState == GameState.gameover && (
+				<GameOver setGameState={setGameState} />
+			)}
+			{gameState == GameState.nextlevel && (
+				<NextLevel setGameState={setGameState} />
+			)}
+			<div className={`${Styles.containerCards} ligth_border`}>
 				{level?.cards?.map((card: Card, index: number) => (
-					<DrawCard key={index} card={card} find={Find} />
+					<DrawCard
+						key={index}
+						level={level}
+						card={card}
+						level={level}
+						setLevel={setLevel}
+						setGameState={setGameState}
+					/>
 				))}
 			</div>
 		</div>
