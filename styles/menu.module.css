@@ -1,0 +1,115 @@
+/** @format */
+
+.container {
+	width: 100%;
+	height: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
+.title {
+	color: #0303ce;
+	text-shadow: 1px 1px 5px #fceb9cfd;
+	font-size: 35px;
+	font-weight: 900;
+}
+
+.containerCategory {
+	width: 100%;
+	height: auto;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.cardOption {
+	width: 100px;
+	height: 150px;
+	border-radius: 10px;
+	background-color: #2e2e2d65;
+	box-shadow: 0 0 3px 1px #fceb9cfd;
+	box-sizing: border-box;
+	transition: transform 1s ease;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	animation: moveCard 4s ease infinite;
+}
+
+@keyframes moveCard {
+	0% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+.img {
+	width: 100%;
+	height: 100%;
+	border-radius: 10px;
+}
+
+.img:hover {
+	transform: scale(0.9);
+}
+
+.img:active {
+	transform: scale(0.9);
+}
+
+.background {
+	opacity: 1;
+	position: absolute;
+	z-index: 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	height: 100%;
+	background-image: url("../public/egipcio.jpg");
+	background-repeat: repeat;
+	box-shadow: inset 0 0 500px 50px black;
+	animation: movhe 10s linear infinite;
+}
+
+@keyframes move {
+	0% {
+		transform: translate(-50%, -50%);
+	}
+	10% {
+		transform: translate(-40%, -40%);
+	}
+	20% {
+		transform: translate(-30%, -30%);
+	}
+	35% {
+		transform: translate(-20%, -20%);
+	}
+	50% {
+		transform: translate(-30%, -30%);
+	}
+	60% {
+		transform: translate(-40%, -40%);
+	}
+	70% {
+		transform: translate(-50%, -50%);
+	}
+	80% {
+		transform: translate(-60%, -60%);
+	}
+}

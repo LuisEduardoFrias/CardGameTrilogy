@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import styles from "st/Home.module.css";
-import Game from "cp/game";
+import Core from "cp/core";
 
 export default function Home() {
 	return (
@@ -17,7 +17,7 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<main className={styles.main}>
-				<Game />
+				<Core />
 			</main>
 		</>
 	);

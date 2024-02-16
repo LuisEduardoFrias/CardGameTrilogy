@@ -27,7 +27,7 @@ export default function Game() {
 
 	useEffect(() => {
 		if (gameState == GameState.nextlevel) {
-			alert("useEffect: " + JSON.stringify(level, null, 2));
+			//	alert("useEffect: " + JSON.stringify(level, null, 2));
 			initializeLevel(setLevel, level);
 		}
 	}, [level.level]);
