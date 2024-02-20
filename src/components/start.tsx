@@ -1,4 +1,5 @@
 /** @format */
+"use client"
 
 import { GameState } from "cp/game";
 import Button from "cp/button";

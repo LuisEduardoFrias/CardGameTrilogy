@@ -1,44 +1,23 @@
 /** @format */
 
 import Card from "dm/card";
-
-export enum TypeCards {
-	yugioh = "yugioh",
-	pokemon = "pokemon",
-	digimon = "digimon",
-	all = "all"
-}
+import Category from "dm/category";
 
 export default class Level {
-	cards: Card[];
 	level: number;
 	time: number;
+	private readonly category: Category;
 	private readonly mult: number = 2;
 	private readonly count: number = 6;
 
-	constructor(level: number = 0) {
-		this.cards = [];
+	constructor(level: number = 0, category: Category) {
 		this.level = level;
-		this.time = (10 * 6) / 2 - 10 * 6 * 0.2;
-		this.GetCards();
+		this.time = 18 + Math.pow(level, 2);
+		//(10 * (6 + level)) / 2 - 10 * (6 + level) * 0.2;
+		this.category = category;
 	}
 
-	private GetCards() {
-		const array: Card = [];
-
-		for (let i = 0; i < this.count + this.level * this.mult; i++) {
-			array.push(
-				new Card(
-					`${i}`,
-					`name-${i}`,
-					`https://images.ygoprodeck.com/images/cards/100000${i}0.jpg`
-				)
-			);
-		}
-
-		for (let i = 0; i < array.length; i++) {
-			let randomIndex = Math.floor(Math.random() * array.length);
-			this.cards.splice(randomIndex, 0, array[i]);
-		}
+	private async cardsGenerate() {
+		await this.category.cardsGenerate(this.count + this.level * this.mult);
 	}
 }

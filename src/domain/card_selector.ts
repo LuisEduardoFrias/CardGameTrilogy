@@ -1,6 +1,7 @@
 /** @format */
 
 import { GameState } from "cp/game";
+import Category from "dm/category";
 import Level from "dm/level";
 
 type Find = {
@@ -9,25 +10,26 @@ type Find = {
 	setCardState: (value: boolean) => void;
 };
 
-const finds: Find[] = [];
+let finds: Find[] = [];
 
 export default function CardSelector(
 	cardId: string,
 	level: Level,
 	setLevel: (callback: (prev: Level) => Level) => void,
 	setGameState: (value: GameState) => void,
-	setCardState: () => void
+	setCardState: () => void,
+	category: Category
 ): undefined {
 	//
-	if (finds.length === level.cards.length / 2) {
+	if (finds.length === level.category.cards?.length / 2) {
 		setLevel((prev: Level) => {
 			prev.level += 1;
-			const newLevel: Level = new Level(prev.level);
+			const newLevel: Level = new Level(prev.level, category);
 			return newLevel;
 		});
 
 		setGameState(GameState.nextlevel);
-		find = [];
+		finds = [];
 
 		return undefined;
 	}

@@ -1,7 +1,10 @@
 /** @format */
+"use client";
+
 import React, { useState, useEffect } from "react";
 import Card, { CardState } from "dm/card";
 import { GameState } from "cp/game";
+import Category from "dm/category";
 import Lever from "dm/lever";
 import CardSelector from "dm/card_selector";
 import Styles from "st/draw_card.module.css";
@@ -10,12 +13,14 @@ export default function DrawCard({
 	level,
 	card,
 	setLevel,
-	setGameState
+	setGameState,
+	category
 }: {
 	level: Level;
 	card: Card;
 	setLevel: (callback: (prev: Level) => Level) => void;
 	setGameState: (value: GameState) => void;
+	category: Category;
 }) {
 	const [state, setState] = useState<CardState>(card.state);
 
@@ -23,7 +28,7 @@ export default function DrawCard({
 		if (state == CardState.show) {
 			const timeoutId = setTimeout(() => {
 				CardSelector(card.id, level, setLevel, setGameState, () => {
-					setState(CardState.hidden);
+					setState(CardState.hidden), category;
 				});
 			}, 500);
 

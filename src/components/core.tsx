@@ -1,10 +1,12 @@
 /** @format */
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Category from "dm/category";
 import Game from "cp/game";
 import Menu from "cp/menu";
 
-const enum CoreState {
+export const enum CoreState {
 	game = "game",
 	menu = "menu"
 }
@@ -12,9 +14,19 @@ const enum CoreState {
 export default function Core() {
 	//
 	const [state, setState] = useState(CoreState.menu);
-	const [startupData, setStartupData] = useState({});
+	const [startupData, setStartupData] = useState<Category>(null);
+
+	useEffect(() => {
+		//if (startupData !== null) setState(CoreState.game);
+	}, [startupData]);
 
 	return (
-		<>{state == CoreState.menu ? <Menu setStartupData /> : <Game startupData />}</>
+		<>
+			{state == CoreState.menu ? (
+				<Menu setStartupData={setStartupData} setCoreState={setState} />
+			) : (
+				<Game startupData={startupData} setCoreState={setState} />
+			)}
+		</>
 	);
 }

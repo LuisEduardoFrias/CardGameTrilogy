@@ -23,7 +23,8 @@
 .containerCategory {
 	width: 100%;
 	height: auto;
-
+	perspective: 500px;
+	
 	display: flex;
 	flex-direction: row;
 	justify-content: center;

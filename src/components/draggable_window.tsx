@@ -1,7 +1,7 @@
 /** @format */
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 export default function DraggableWindow({
 	children,
@@ -12,42 +12,38 @@ export default function DraggableWindow({
 	src: string;
 	props: any;
 }): React.ReactElement {
-	//
-	const MemoizedMovie = React.memo((): React.ReactElement => {
-		const audioRef = useRef<HTMLAudioElement>(null);
+	const audioRef = useRef<HTMLAudioElement>(null);
+	const [audioPlaying, setAudioPlaying] = useState(true);
 
-		function handleVisibilityChange() {
-			if (document.hidden) {
-				if (audioRef.current) audioRef.current.pause();
+	const handleVisibilityChange = () => {
+		if (document.hidden) {
+			setAudioPlaying(false);
+		} else {
+			setAudioPlaying(true);
+		}
+	};
+
+	useEffect(() => {
+		if (audioRef.current) {
+			if (audioPlaying) {
+				audioRef.current.play();
 			} else {
-				if (audioRef.current) audioRef.current.play();
+				audioRef.current.pause();
 			}
 		}
 
-		useEffect(() => {
-			if (audioRef.current) {
-				audioRef.current.play();
-			}
+		document.addEventListener("visibilitychange", handleVisibilityChange);
 
-			document.addEventListener("visibilitychange", handleVisibilityChange);
-
-			return () => {
-				document.removeEventListener(
-					"visibilitychange",
-					handleVisibilityChange
-				);
-			};
-		}, []);
-
-		return (
-			<audio ref={audioRef} src={src} loop autoplay controls={false}></audio>
-		);
-	});
+		return () => {
+			document.removeEventListener("visibilitychange", handleVisibilityChange);
+		};
+	}, [audioPlaying]);
 
 	return (
 		<div style={{ width: "100%", height: "100%" }} {...props}>
 			{children}
-			<MemoizedMovie />
+			<audio ref={audioRef} src={src} loop autoPlay controls={false}></audio>
 		</div>
 	);
 }
+
