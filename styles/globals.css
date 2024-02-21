@@ -272,11 +272,14 @@ a {
 }
 
 .opacity-on {
+	position: static;
 	opacity: 0;
 	transition: opacity 1s ease;
 }
 
 .opacity-off {
+	position: absolute;
+	top: -10000;
 	opacity: 1;
 	transition: opacity 1s ease;
 }

@@ -16,10 +16,6 @@ export default function Core() {
 	const [state, setState] = useState(CoreState.menu);
 	const [startupData, setStartupData] = useState<Category>(null);
 
-	useEffect(() => {
-		//if (startupData !== null) setState(CoreState.game);
-	}, [startupData]);
-
 	return (
 		<>
 			{state == CoreState.menu ? (

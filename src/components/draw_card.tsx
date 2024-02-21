@@ -27,9 +27,16 @@ export default function DrawCard({
 	useEffect(() => {
 		if (state == CardState.show) {
 			const timeoutId = setTimeout(() => {
-				CardSelector(card.id, level, setLevel, setGameState, () => {
-					setState(CardState.hidden), category;
-				});
+				CardSelector(
+					card.id,
+					level,
+					setLevel,
+					setGameState,
+					() => {
+						setState(CardState.hidden);
+					},
+					category
+				);
 			}, 500);
 
 			return () => {

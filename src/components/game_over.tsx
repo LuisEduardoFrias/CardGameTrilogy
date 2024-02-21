@@ -11,9 +11,8 @@ export default function GameOver({
 }: {
 	setGameState: (value: GameState) => void;
 }) {
-	
 	function handleClick() {
-		setGameState(GameState.start);
+		setGameState(GameState.Restart);
 	}
 
 	return (
@@ -22,8 +21,17 @@ export default function GameOver({
 				<span className={Styles.title}>Game Over</span>
 				<Button
 					className={`${Styles.btn} btn red_metal`}
-					onClick={handleClick}
+					onClick={() => {
+						setGameState(GameState.restart);
+					}}
 					title='Restart'
+				/>
+				<Button
+					className={`${Styles.btn} btn red_metal`}
+					onClick={() => {
+						setGameState(GameState.selectcategory);
+					}}
+					title='Menú'
 				/>
 			</div>
 		</Sound>

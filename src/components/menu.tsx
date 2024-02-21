@@ -2,15 +2,16 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
+import { CoreState } from "cp/core";
 import DraggableWindow from "cp/draggable_window";
 import Button from "cp/button";
+import Loading from "cp/loading";
 import Category from "dm/category";
 import Yugioh from "dm/yugioh";
 import Pokemon from "dm/pokemon";
 import Digimon from "dm/digimon";
 import SoundClick from "cp/sound_click";
 import Styles from "st/menu.module.css";
-import { CoreState } from "cp/core";
 
 const initCategory: Category[] = [
 	new Yugioh("yugioh.jpg"),
@@ -27,8 +28,15 @@ export default function Menu({
 }): React.ReactElement {
 	//
 
+	const [loading, setLoading] = useState(true);
 	const [btnDesabled, setBtnDesabled] = useState(true);
 	const [categorys, setCategorys] = useState<Category[]>(initCategory);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setLoading(false);
+		}, 1000);
+	}, []);
 
 	useEffect(() => {
 		return () => {
@@ -66,8 +74,8 @@ export default function Menu({
 					});
 					setCategorys([...newcat]);
 				}, 200);
-				setBtnDesabled(true);
 			}
+			setBtnDesabled(true);
 		}, 1000);
 	}
 
@@ -87,33 +95,59 @@ export default function Menu({
 	}
 
 	return (
-		<DraggableWindow src='menu_music.mp3'>
-			<div className={Styles.background}>
-				<div className={Styles.container}>
-					<span className={Styles.title}>Select categorys</span>
-					<div className={Styles.containerCategory}>
-						{categorys.map((cat: Category, index: number) => (
-							<div key={index} className={`${cat.animation}`}>
-								<SoundClick src='select_card.mp3'>
-									<div
-										style={{ zIndex: cat.animation === "" ? "2" : "3" }}
-										key={index}
-										className={`${Styles.cardOption}`}
-										onClick={() => handleSelect(cat)}>
-										<img
-											loading='lazy'
-											src={`${cat.img}`}
-											className={Styles.img}
-											alt={cat.img}
-										/>
-									</div>
-								</SoundClick>
-							</div>
-						))}
+		<>
+			<Loading className={`${loading ? "opacity-off" : "opacity-on"}`} />
+			<DraggableWindow
+				src='menu_music.mp3'
+				className={`${!loading ? "opacity-off" : "opacity-on"}`}>
+				<div className={Styles.background}>
+					<div className={Styles.container}>
+						<span className={Styles.title}>Select categorys</span>
+						<div className={Styles.containerCategory}>
+							<CategorySelectCards
+								categorys={categorys}
+								handleSelect={handleSelect}
+							/>
+						</div>
+						<Button
+							disabled={btnDesabled}
+							onClick={handleClick}
+							title='Start'
+						/>
 					</div>
-					<Button disabled={btnDesabled} onClick={handleClick} title='Start' />
 				</div>
-			</div>
-		</DraggableWindow>
+			</DraggableWindow>
+		</>
+	);
+}
+
+function CategorySelectCards({
+	categorys,
+	handleSelect
+}: {
+	categorys: Category[];
+	handleSelect: (value: Category) => void;
+}) {
+	return (
+		<>
+			{categorys.map((cat: Category, index: number) => (
+				<div key={index} className={`${cat.animation}`}>
+					<SoundClick src='select_card.mp3'>
+						<div
+							key={index}
+							style={{ zIndex: cat.animation === "" ? "2" : "3" }}
+							className={`${Styles.cardOption}`}
+							onClick={() => handleSelect(cat)}>
+							<img
+								loading='lazy'
+								src={`${cat.img}`}
+								className={Styles.img}
+								alt={cat.img}
+							/>
+						</div>
+					</SoundClick>
+				</div>
+			))}
+		</>
 	);
 }
