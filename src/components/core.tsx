@@ -1,28 +1,31 @@
 /** @format */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Category from "dm/category";
 import Game from "cp/game";
 import Menu from "cp/menu";
 
 export const enum CoreState {
-	game = "game",
-	menu = "menu"
+	Game = "Game",
+	Menu = "Menu"
 }
 
 export default function Core() {
-	//
-	const [state, setState] = useState(CoreState.menu);
-	const [startupData, setStartupData] = useState<Category>(null);
+	const [coreState, setCoreState] = useState(CoreState.Menu);
+	const [category, setCategory] = useState<Category>();
 
 	return (
-		<>
-			{state == CoreState.menu ? (
-				<Menu setStartupData={setStartupData} setCoreState={setState} />
+		<div>
+			{coreState === CoreState.Menu ? (
+				<Menu
+					key='menu'
+					setCoreCategory={setCategory}
+					setCoreState={setCoreState}
+				/>
 			) : (
-				<Game startupData={startupData} setCoreState={setState} />
+				<Game key='game' category={category} setCoreState={setCoreState} />
 			)}
-		</>
+		</div>
 	);
 }

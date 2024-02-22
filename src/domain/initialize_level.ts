@@ -1,17 +1,20 @@
 /** @format */
 
-import Level from "md/level";
+import Category from "dm/category";
+import Level from "dm/level";
 
 export default async function initializeLevel(
-	setLevel: (value: Level) => void,
-	level: Level
-) {
-	await level.cardsGenerate();
+	category: Category,
+	level: number = 0
+): Level {
+	const newLevel: Level = new Level(category, level);
+
+	await newLevel.cardsGenerate();
 
 	const newArray: Card[] = [];
 
-	const duplicateCards: Card[] = level.category.cards.concat(
-		level.category.cards.slice()
+	const duplicateCards: Card[] = newLevel.category.cards.concat(
+		newLevel.category.cards.slice()
 	);
 
 	for (let i = 0; i < duplicateCards.length; i++) {
@@ -19,7 +22,8 @@ export default async function initializeLevel(
 		newArray.splice(randomIndex, 0, duplicateCards[i]);
 	}
 
-	level.category.cards = newArray;
+	newLevel.category.cards = newArray;
 
-	setLevel(level);
+	//alert("initializeLevel: " + JSON.stringify(newLevel));
+	return newLevel;
 }

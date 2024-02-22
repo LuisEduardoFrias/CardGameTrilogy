@@ -2,21 +2,22 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { CoreState } from "cp/core";
+import LoadingTransition from "cp/loading_transition";
 import DraggableWindow from "cp/draggable_window";
+import MemorizedCards from "cp/memorized_cards";
+import Header from "cp/header";
 import DrawCard from "cp/draw_card";
+import CardSelector from "dm/card_selector";
 import GameOver from "cp/game_over";
 import Start from "cp/start";
 import Category from "dm/category";
 import Settings from "cp/settings";
-import Button from "cp/button";
 import Loading from "cp/loading";
-import Timer from "cp/timer";
 import Pause from "cp/pause";
-import { CoreState } from "cp/core";
 import Level from "dm/level";
 import NextLevel from "cp/next_level";
 import initializeLevel from "dm/initialize_level";
-import CardSelector from "dm/card_select";
 
 import Styles from "st/game.module.css";
 
@@ -32,161 +33,97 @@ export enum GameState {
 }
 
 export default function Game({
-	startupData,
+	category,
 	setCoreState
 }: {
-	startupData: Category;
+	category: Category;
 	setCoreState: (value: CoreState) => void;
 }) {
 	//
 	const [gameState, setGameState] = useState<GameState>(GameState.stop);
+	const [level, setLevel] = useState();
+	const { reset, select } = CardSelector();
 
-	const [loading, setLoading] = useState(true);
-	const [level, setLevel] = useState({});
+	const execute: object = {
+		nextlevel: () => {
+			(async () => {
+				setLevel(await initializeLevel(category.clone(), level.level));
+			})();
+			reset();
+			setLevel(undefined);
+		},
+		selectcategory: () => {
+			setCoreState(CoreState.Menu);
+			setGameState(GameState.stop);
+			reset();
+			setLevel(undefined);
+		},
+		restart: () => {
+			setLevel(undefined);
+			setGameState(GameState.stop);
+			reset();
+			(async () => {
+				setLevel(await initializeLevel(category.clone()));
+			})();
+		},
+		default: () => {}
+	};
 
 	useEffect(() => {
-		initializeLevel(setLevel, new Level(undefined, startupData));
-		initializeLevel(setLevel, new Level(undefined, startupData));
-
-		return () => {
-			setGameState(GameState.stop);
-			setLoading(true);
-		};
+		(async () => {
+			setLevel(await initializeLevel(category.clone()));
+		})();
 	}, []);
 
 	useEffect(() => {
-		if (gameState == GameState.nextlevel) {
-			initializeLevel(setLevel, level);
-		}
-		if (gameState == GameState.selectcategory) {
-			setCoreState(CoreState.menu);
-		}
-		if (gameState == GameState.restart) {
-			alert("reinicial");
-			//setCoreState(CoreState.menu);
-		}
-	}, [level, gameState]);
+		(execute[gameState] ?? execute["default"])();
+	}, [gameState]);
 
 	return (
 		<>
-			<Loading className={`${loading ? "opacity-off" : "opacity-on"}`} />
+			<LoadingTransition>
+				<DraggableWindow src='in_game.mp3'>
+					<div className={Styles.gameContainer}>
+						{level && (
+							<Header
+								level={level.level}
+								time={level.time}
+								gameState={gameState}
+								setGameState={setGameState}
+							/>
+						)}
 
-			<DraggableWindow
-				className={`${!loading ? "opacity-off" : "opacity-on"}`}
-				src='in_game.mp3'>
-				<div className={Styles.gameContainer}>
-					<Header
-						level={level}
-						gameState={gameState}
-						setGameState={setGameState}
-					/>
-					{gameState == GameState.stop && <Start setGameState={setGameState} />}
-					{gameState == GameState.pause && (
-						<Pause setCoreState={setCoreState} setGameState={setGameState} />
-					)}
-					{gameState == GameState.settings && (
-						<Settings setGameState={setGameState} />
-					)}
-					{gameState == GameState.gameover && (
-						<GameOver setGameState={setGameState} />
-					)}
-					{gameState == GameState.nextlevel && (
-						<NextLevel setGameState={setGameState} />
-					)}
-					<div className={`${Styles.containerCards} ligth_border`}>
-						<CardMemory
-							level={level}
-							setLevel={setLevel}
-							setLoading={setLoading}
-							setGameState={setGameState}
-							startupData={startupData}
-						/>
+						{gameState == GameState.stop && (
+							<Start setGameState={setGameState} />
+						)}
+						{gameState == GameState.pause && (
+							<Pause setGameState={setGameState} />
+						)}
+						{gameState == GameState.settings && (
+							<Settings setGameState={setGameState} />
+						)}
+						{gameState == GameState.gameover && (
+							<GameOver setGameState={setGameState} />
+						)}
+						{gameState == GameState.nextlevel && (
+							<NextLevel setGameState={setGameState} />
+						)}
+						<div className={`${Styles.containerCards} ligth_border`}>
+							{level?.category?.cards?.map((card: Card, index: number) => (
+								<DrawCard
+									key={index}
+									level={level}
+									card={card}
+									setLevel={setLevel}
+									setGameState={setGameState}
+									category={category.clone()}
+									select={select}
+								/>
+							))}
+						</div>
 					</div>
-				</div>
-			</DraggableWindow>
+				</DraggableWindow>
+			</LoadingTransition>
 		</>
 	);
-}
-
-function Header({
-	level,
-	gameState,
-	setGameState
-}: {
-	level: Level;
-	gameState: GameState;
-	setGameState: (value: GameState) => void;
-}) {
-	return (
-		<header className={`${Styles.header} ligth_border`}>
-			<span className={`${Styles.title} blue_metal_text`}>
-				Card Game Trilogy
-			</span>
-			<div className={Styles.timerLevel}>
-				<span className={Styles.textLevel}>{`Level: ${level?.level + 1}`}</span>
-				<Timer
-					time={level?.time}
-					gameState={gameState}
-					setGameState={setGameState}
-				/>
-				<Button
-					className='option-btn'
-					title='☰'
-					textClass='option-span'
-					onClick={() => {
-						setGameState(GameState.pause);
-					}}
-				/>
-			</div>
-		</header>
-	);
-}
-
-function CardMemory({
-	level,
-	setLevel,
-	setLevel,
-	setGameState,
-	startupData
-}: {
-	level: Level;
-	setLoading:(value:boolean)=> void,
-	setLevel: (callback: (prev: Level) => Level) => void;
-	setGameState: (value: GameState) => void;
-	startupData: Category;
-}) {
-	const [category, setCategory] = useState(level.category);
-
-	useEffect(() => {
-		const loadingPromise = new Promise(resolve => {
-			setTimeout(() => {
-				resolve();
-			}, 500);
-		});
-
-		loadingPromise.then(() => {
-			setLoading(false);
-		});
-
-		return () => {
-			loadingPromise.then(() => {});
-		};
-	}, []);
-
-	const memoizedDrawCardList = useMemo(
-		() =>
-			category?.cards?.map((card: Card, index: number) => (
-				<DrawCard
-					key={index}
-					card={card}
-					level={level}
-					setLevel={setLevel}
-					setGameState={setGameState}
-					category={startupData}
-				/>
-			)),
-		[category]
-	);
-
-	return <>{memoizedDrawCardList}</>;
 }

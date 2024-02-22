@@ -1,6 +1,7 @@
 /** @format */
 
 import Category from "dm/category";
+import Card from "dm/card";
 
 export default class Yugioh extends Category {
 	URL1: string =
@@ -19,17 +20,15 @@ export default class Yugioh extends Category {
 
 			for (let i = 0; i < count; i++) {
 				const index = Math.floor(Math.random() * data.length);
+				const selectedData = data.splice(index, 1)[0];
 
-				const response2 = await fetch(
-					this.URL2.replace("{id}", data[index].id)
+				this.cards.push(
+					new Card(
+						selectedData.id,
+						selectedData.name,
+						this.URL2.replace("{id}", selectedData.id)
+					)
 				);
-				const otherData: object = await response2.json();
-
-				this.data.push({
-					id: data[index].id,
-					name: data[index].name,
-					url: otherData.sprites.front_default
-				});
 			}
 		} catch (error) {
 			console.error("Error fetching data:", error);

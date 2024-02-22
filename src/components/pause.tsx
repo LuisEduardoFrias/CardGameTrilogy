@@ -8,9 +8,9 @@ import Styles from "st/pause.module.css";
 
 export default function Pause({
 	setGameState,
-	setCoreState
+	
 }: {
-	setCoreState: (value: CoreState) => void;
+
 	setGameState: (value: GameState) => void;
 }) {
 	return (
@@ -24,7 +24,7 @@ export default function Pause({
 			<Button
 				title='menú'
 				onClick={() => {
-					setCoreState(CoreState.menu);
+					setGameState(GameState.selectcategory);
 				}}
 			/>
 			<Button

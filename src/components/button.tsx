@@ -1,19 +1,27 @@
 /** @format */
 "use client";
 
-export default function Button(props: any) {
-	const _styles = {
+export default function Button({
+	title,
+	textClass,
+	...rest
+}: {
+	title: string;
+	textClass?: string;
+	[key: string]: any;
+}) {
+	const styles = {
 		cursor: "pointer",
 		userSelect: "none"
 	};
 	return (
-		<button styele={{ _styles }} className='btn blue_metal' {...props}>
+		<button style={styles} className='btn blue_metal' {...rest}>
 			<span
-				styele={{ _styles }}
-				className={` ${
-					props.disabled && "disabled"
-				} ${props?.textClass ? props.textClass : "black_metal_text"}`}>
-				{props.title}
+				style={styles}
+				className={` ${rest.disabled ? "disabled" : ""} ${
+					textClass ? textClass : "black_metal_text"
+				}`}>
+				{title}
 			</span>
 		</button>
 	);

@@ -1,16 +1,16 @@
 /** @format */
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CoreState } from "cp/core";
-import DraggableWindow from "cp/draggable_window";
+import SelectCategoryCard from "cp/select_category_card";
+import WindowSound from "cp/window_sound";
+import LoadingTransition from "cp/loading_transition";
 import Button from "cp/button";
-import Loading from "cp/loading";
 import Category from "dm/category";
 import Yugioh from "dm/yugioh";
 import Pokemon from "dm/pokemon";
 import Digimon from "dm/digimon";
-import SoundClick from "cp/sound_click";
 import Styles from "st/menu.module.css";
 
 const initCategory: Category[] = [
@@ -19,135 +19,73 @@ const initCategory: Category[] = [
 	new Digimon("digimon.jpg")
 ];
 
+function cloneInitialState(): Category[] {
+	return initCategory.map((cat: Category, i: number) => {
+		return cat.clone();
+	});
+}
+
 export default function Menu({
-	setStartupData,
+	setCoreCategory,
 	setCoreState
 }: {
-	setStartupData: (value: Category) => void;
+	setCoreCategory: (value: Category) => void;
 	setCoreState: (value: CoreState) => void;
 }): React.ReactElement {
 	//
-
-	const [loading, setLoading] = useState(true);
 	const [btnDesabled, setBtnDesabled] = useState(true);
-	const [categorys, setCategorys] = useState<Category[]>(initCategory);
-
-	useEffect(() => {
-		setTimeout(() => {
-			setLoading(false);
-		}, 1000);
-	}, []);
-
-	useEffect(() => {
-		return () => {
-			setCategorys(initCategory);
-		};
-	}, [categorys]);
+	const [categorys, setCategorys] = useState<Category[]>(cloneInitialState());
 
 	function handleClick() {
+		let categorySeleted: Category = undefined;
+
 		setCategorys((prev: Category[]) => {
-			const arr: Category[] = prev.map((cat: Category) => {
+			const newCategory: Category = [...prev];
+			newCategory.forEach((cat: Category) => {
 				if (cat.isSelect === true) {
 					cat.animation = "select";
+					categorySeleted = cat.clone();
 				}
-				return { ...cat };
 			});
-
-			return [...arr];
+			return [...newCategory];
 		});
 
 		setTimeout(() => {
-			const cats: Category[] = categorys.filter(
-				(cat: object) => cat.isSelect === true
-			);
-
-			if (cats.length >= 1) {
-				setStartupData(cats[0]);
-				setCoreState(CoreState.game);
-				setTimeout(() => {
-					const newcat: Category[] = categorys.map((cat: Category) => {
-						if (cat.isSelect === true) {
-							cat.animation = "";
-							cat.isSelect = false;
-						}
-						return cat;
-					});
-					setCategorys([...newcat]);
-				}, 200);
+			if (categorySeleted !== undefined) {
+				setCoreCategory(categorySeleted.clone());
+				setCoreState(CoreState.Game);
 			}
+		}, 1000);
+
+		setTimeout(() => {
+			setCategorys(cloneInitialState());
 			setBtnDesabled(true);
 		}, 1000);
 	}
 
-	function handleSelect(_cat: any) {
-		setCategorys((prev: Category[]) => {
-			const arr: Category[] = prev.map((cat: Category) => {
-				cat.isSelect = false;
-				if (cat.img === _cat.img) {
-					setBtnDesabled(false);
-					cat.isSelect = true;
-				}
-				return cat;
-			});
-
-			return [...arr];
-		});
-	}
-
 	return (
 		<>
-			<Loading className={`${loading ? "opacity-off" : "opacity-on"}`} />
-			<DraggableWindow
-				src='menu_music.mp3'
-				className={`${!loading ? "opacity-off" : "opacity-on"}`}>
-				<div className={Styles.background}>
-					<div className={Styles.container}>
-						<span className={Styles.title}>Select categorys</span>
-						<div className={Styles.containerCategory}>
-							<CategorySelectCards
-								categorys={categorys}
-								handleSelect={handleSelect}
+			<LoadingTransition>
+				<WindowSound src='menu_music.mp3'>
+					<div className={Styles.background}>
+						<div className={Styles.container}>
+							<span className={Styles.title}>Select categorys</span>
+							<div className={Styles.containerCategory}>
+								<SelectCategoryCard
+									categorys={categorys}
+									setCategorys={setCategorys}
+									setBtnDesabled={setBtnDesabled}
+								/>
+							</div>
+							<Button
+								disabled={btnDesabled}
+								onClick={handleClick}
+								title='Start'
 							/>
 						</div>
-						<Button
-							disabled={btnDesabled}
-							onClick={handleClick}
-							title='Start'
-						/>
 					</div>
-				</div>
-			</DraggableWindow>
-		</>
-	);
-}
-
-function CategorySelectCards({
-	categorys,
-	handleSelect
-}: {
-	categorys: Category[];
-	handleSelect: (value: Category) => void;
-}) {
-	return (
-		<>
-			{categorys.map((cat: Category, index: number) => (
-				<div key={index} className={`${cat.animation}`}>
-					<SoundClick src='select_card.mp3'>
-						<div
-							key={index}
-							style={{ zIndex: cat.animation === "" ? "2" : "3" }}
-							className={`${Styles.cardOption}`}
-							onClick={() => handleSelect(cat)}>
-							<img
-								loading='lazy'
-								src={`${cat.img}`}
-								className={Styles.img}
-								alt={cat.img}
-							/>
-						</div>
-					</SoundClick>
-				</div>
-			))}
+				</WindowSound>
+			</LoadingTransition>
 		</>
 	);
 }

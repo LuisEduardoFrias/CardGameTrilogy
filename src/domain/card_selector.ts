@@ -1,7 +1,9 @@
 /** @format */
 
+import { useRef } from "react";
 import { GameState } from "cp/game";
 import Category from "dm/category";
+import initializeLevel from "dm/initialize_level";
 import Level from "dm/level";
 
 type Find = {
@@ -10,45 +12,98 @@ type Find = {
 	setCardState: (value: boolean) => void;
 };
 
-let finds: Find[] = [];
+export default function CardSelector(): object {
+	//
+	const findsRef = useRef<Find[]>([]);
+
+	function reset() {
+		findsRef.current.splice(0);
+	}
+
+	function select(
+		cardId: string,
+		level: Level,
+		setLevel: (prev: Level) => Level,
+		setGameState: (value: GameState) => void,
+		setCardState: () => void,
+		category: Category
+	): undefined {
+		if (findsRef.current.length === level.category.cards?.length / 2) {
+			(async () => {
+				setLevel(await initializeLevel(category, level.level + 1));
+			})();
+
+			setGameState(GameState.nextlevel);
+			findsRef.current.splice(0);
+
+			return undefined;
+		}
+		const indexkey = findsRef.current.findIndex(
+			(find: Find) => find.key === cardId
+		);
+
+		const indexValue = findsRef.current.findIndex(
+			(find: Find) => find.value === false
+		);
+
+		if (indexkey >= 0 || indexValue >= 0) {
+			if (findsRef.current[indexkey]?.key === cardId) {
+				findsRef.current[indexkey].value = true;
+			} else {
+				findsRef.current[indexValue].setCardState();
+				setCardState();
+				findsRef.current.splice(indexValue, 1);
+			}
+
+			return undefined;
+		}
+
+		findsRef.current.push({
+			key: cardId,
+			value: false,
+			setCardState: setCardState
+		});
+	}
+
+	return { reset, select };
+}
+
+/*
+let findsRef: Find[] = [];
 
 export default function CardSelector(
 	cardId: string,
 	level: Level,
-	setLevel: (callback: (prev: Level) => Level) => void,
+	setLevel: (prev: Level) => Level,
 	setGameState: (value: GameState) => void,
 	setCardState: () => void,
 	category: Category
 ): undefined {
 	//
-	if (finds.length === level.category.cards?.length / 2) {
-		setLevel((prev: Level) => {
-			prev.level += 1;
-			const newLevel: Level = new Level(prev.level, category);
-			return newLevel;
-		});
-
+	if (findsRef.length === level.category.cards?.length / 2) {
+		setLevel(initializeLevel(category, level.level + 1));
 		setGameState(GameState.nextlevel);
-		finds = [];
+		findsRef = [];
 
 		return undefined;
 	}
 
-	const indexkey = finds.findIndex((find: Find) => find.key === cardId);
+	const indexkey = findsRef.findIndex((find: Find) => find.key === cardId);
 
-	const indexValue = finds.findIndex((find: Find) => find.value === false);
+	const indexValue = findsRef.findIndex((find: Find) => find.value === false);
 
 	if (indexkey >= 0 || indexValue >= 0) {
-		if (finds[indexkey]?.key === cardId) {
-			finds[indexkey].value = true;
+		if (findsRef[indexkey]?.key === cardId) {
+			findsRef[indexkey].value = true;
 		} else {
-			finds[indexValue].setCardState();
+			findsRef[indexValue].setCardState();
 			setCardState();
-			finds.splice(indexValue, 1);
+			findsRef.splice(indexValue, 1);
 		}
 
 		return undefined;
 	}
 
-	finds.push({ key: cardId, value: false, setCardState: setCardState });
+	findsRef.push({ key: cardId, value: false, setCardState: setCardState });
 }
+*/

@@ -193,6 +193,7 @@ a {
 
 .select {
 	position: relative;
+	z-index: 3;
 	animation: slide-out-fwd-center 0.7s cubic-bezier(0.55, 0.085, 0.68, 0.53)
 		both;
 }
@@ -271,15 +272,14 @@ a {
 	}
 }
 
-.opacity-on {
-	position: static;
+.opacity {
+	position: absolute;
+	top: -10000px;
 	opacity: 0;
-	transition: opacity 1s ease;
+	transition: opacity 5s ease;
 }
 
-.opacity-off {
-	position: absolute;
-	top: -10000;
+.no-opacity {
 	opacity: 1;
-	transition: opacity 1s ease;
+	transition: opacity 5s ease;
 }

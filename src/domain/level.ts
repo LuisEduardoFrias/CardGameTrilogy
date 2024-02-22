@@ -10,10 +10,11 @@ export default class Level {
 	private readonly mult: number = 2;
 	private readonly count: number = 6;
 
-	constructor(level: number = 0, category: Category) {
+	constructor(category: Category, level: number = 0) {
 		this.level = level;
-		this.time = 18 + Math.pow(level, 2);
-		//(10 * (6 + level)) / 2 - 10 * (6 + level) * 0.2;
+
+		this.time = (10 * (6 + level)) / 2 - 10 * (6 * level) * 0.1;
+		//18 + Math.pow(level, 2);
 		this.category = category;
 	}
 

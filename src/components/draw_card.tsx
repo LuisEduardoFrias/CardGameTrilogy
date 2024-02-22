@@ -14,20 +14,29 @@ export default function DrawCard({
 	card,
 	setLevel,
 	setGameState,
-	category
+	category,
+	select
 }: {
 	level: Level;
 	card: Card;
 	setLevel: (callback: (prev: Level) => Level) => void;
 	setGameState: (value: GameState) => void;
 	category: Category;
+	select: (
+		cardId: string,
+		level: Level,
+		setLevel: (prev: Level) => Level,
+		setGameState: (value: GameState) => void,
+		setCardState: () => void,
+		category: Category
+	) => undefined;
 }) {
 	const [state, setState] = useState<CardState>(card.state);
 
 	useEffect(() => {
 		if (state == CardState.show) {
 			const timeoutId = setTimeout(() => {
-				CardSelector(
+				select(
 					card.id,
 					level,
 					setLevel,
