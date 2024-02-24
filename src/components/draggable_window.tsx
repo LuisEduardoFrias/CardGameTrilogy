@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
+import useSound from "dm/use_sound";
 
 export default function DraggableWindow({
 	children,
@@ -14,6 +15,7 @@ export default function DraggableWindow({
 }): React.ReactElement {
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const [audioPlaying, setAudioPlaying] = useState(true);
+	const { music } = useSound();
 
 	const handleVisibilityChange = () => {
 		if (document.hidden) {
@@ -42,7 +44,8 @@ export default function DraggableWindow({
 	return (
 		<div style={{ width: "100%", height: "100%" }} {...rest}>
 			{children}
-			<audio ref={audioRef} src={src} loop autoPlay controls={false}></audio>
+			<audio ref={audioRef} volume={music.volume}
+				muted={music.activated} src={src} loop autoPlay controls={false}></audio>
 		</div>
 	);
 }

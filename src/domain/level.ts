@@ -12,9 +12,7 @@ export default class Level {
 
 	constructor(category: Category, level: number = 0) {
 		this.level = level;
-
-		this.time = (10 * (6 + level)) / 2 - 10 * (6 * level) * 0.1;
-		//18 + Math.pow(level, 2);
+		this.time = 18 + level * this.mult * this.count;
 		this.category = category;
 	}
 
