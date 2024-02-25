@@ -2,14 +2,23 @@
 import Button from "cp/button";
 import Styles from "st/settings.module.css";
 import { GameState } from "cp/game";
-import useSound, { Audio } from "dm/use_sound";
+import { initialState, reducer, Audio, Action } from "dm/sound";
+import useSuperState from "dm/use_super_state";
 
 export default function Settings({
 	setGameState
 }: {
 	setGameState: (value: GameState) => void;
 }) {
-	const [ sound, music, setSound, setMusic ]= useSound();
+	const [state, dispatch] = useSuperState(reducer, initialState, ["sound"]);
+
+	function setSound(callback: (audio: Audio) => void) {
+		dispatch({ type: Action.sound, value: callback(state.sound) });
+	}
+
+	function setMusic(callback: (audio: Audio) => void) {
+		dispatch({ type: Action.music, value: callback(state.music) });
+	}
 
 	function handleChange(event: any) {
 		const name = event.target.name;

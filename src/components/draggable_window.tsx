@@ -2,7 +2,8 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import useSound from "dm/use_sound";
+import { initialState, reducer } from "dm/sound";
+import useSuperState from "dm/use_super_state";
 
 export default function DraggableWindow({
 	children,
@@ -15,7 +16,11 @@ export default function DraggableWindow({
 }): React.ReactElement {
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const [audioPlaying, setAudioPlaying] = useState(true);
-	const { music } = useSound();
+	const [state, dispatch] = useSuperState(reducer, initialState, ["sound"]);
+
+useEffect(() => {
+  alert("componente draggable");
+}, [state])
 
 	const handleVisibilityChange = () => {
 		if (document.hidden) {
@@ -26,12 +31,15 @@ export default function DraggableWindow({
 	};
 
 	useEffect(() => {
+		
 		if (audioRef.current) {
 			if (audioPlaying) {
 				audioRef.current.play();
 			} else {
 				audioRef.current.pause();
 			}
+			audioRef.current.volume = state.sound.volume / 100;
+			audioRef.current.muted = state.sound.desactivated;
 		}
 
 		document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -44,8 +52,7 @@ export default function DraggableWindow({
 	return (
 		<div style={{ width: "100%", height: "100%" }} {...rest}>
 			{children}
-			<audio ref={audioRef} volume={music.volume}
-				muted={music.activated} src={src} loop autoPlay controls={false}></audio>
+			<audio ref={audioRef} src={src} loop autoPlay controls={false}></audio>
 		</div>
 	);
 }

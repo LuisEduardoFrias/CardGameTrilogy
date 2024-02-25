@@ -3,7 +3,8 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import useSound from "dm/use_sound";
+import { initialState, reducer } from "dm/sound";
+import useSuperState from "dm/use_super_state";
 
 export default function SoundClick({
 	children,
@@ -12,18 +13,19 @@ export default function SoundClick({
 	children: React.ReactNode;
 	src: string;
 }) {
+	const [state, dispatch] = useSuperState(reducer, initialState, ["sound"]);
+
 	const audioRef = useRef<HTMLAudioElement>(null);
-	const [ sound ] = useSound();
 
 	useEffect(() => {
-		alert("SoundClick: " + JSON.stringify(sound));
+		alert("component sound Click: " + JSON.stringify(state));
 		if (audioRef.current) {
 			audioRef.current.src = src;
 			audioRef.current.loop = false;
-			audioRef.current.volume = sound.volume / 100;
-			audioRef.current.muted = sound.desactivated;
+			audioRef.current.volume = state.sound.volume / 100;
+			audioRef.current.muted = state.sound.desactivated;
 		}
-	}, [sound]);
+	}, [state]);
 
 	const handleClick = () => {
 		if (audioRef.current) audioRef.current.play();
