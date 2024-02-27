@@ -2,8 +2,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { GameState } from "cp/game";
-import Styles from "st/timer.module.css";
+import { GameState } from "./game";
+import Styles from "../styles/timer.module.css";
 
 export default function Timer({
 	time,
@@ -34,7 +34,8 @@ export default function Timer({
 	}, [timer, gameState]);
 
 	useEffect(() => {
-		setTimer(time);
+		if (gameState != GameState.pause && gameState != GameState.start && gameState != GameState.settings)
+			setTimer(time);
 	}, [gameState]);
 
 	return <span className={Styles.timer}>{`Time: ${timer} seconds`}</span>;

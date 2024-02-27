@@ -1,7 +1,7 @@
 /** @format */
 
-import Category from "dm/category";
-import Level from "dm/level";
+import Category from "./category";
+import Level from "./level";
 
 export default async function initializeLevel(
 	category: Category,

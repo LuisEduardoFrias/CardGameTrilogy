@@ -1,6 +1,6 @@
 /** @format */
 
-import Card from "dm/card";
+import Card from "./card";
 
 export default abstract class Category {
 	cards: Card[];

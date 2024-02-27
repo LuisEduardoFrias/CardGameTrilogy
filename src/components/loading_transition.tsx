@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState, useEffect } from "react";
-import Loading from "cp/loading";
+import Loading from "./loading";
 
 export default function LoadingTransition({
 	children

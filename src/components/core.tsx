@@ -2,9 +2,9 @@
 "use client";
 
 import { useState } from "react";
-import Category from "dm/category";
-import Game from "cp/game";
-import Menu from "cp/menu";
+import Category from "../domain/category";
+import Game from "./game";
+import Menu from "./menu";
 
 export const enum CoreState {
 	Game = "Game",

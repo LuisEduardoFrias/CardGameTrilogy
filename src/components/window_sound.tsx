@@ -2,6 +2,8 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
+import { initialState, reducer } from "../domain/audio";
+import useSuperState from "../domain/use_super_state";
 
 export default function WindowSound({
 	children,
@@ -14,6 +16,7 @@ export default function WindowSound({
 }): React.ReactElement {
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const [audioPlaying, setAudioPlaying] = useState(true);
+	const [state, dispatch] = useSuperState(reducer, initialState, ["music"]);
 
 	const handleVisibilityChange = () => {
 		if (document.hidden) {
@@ -30,6 +33,8 @@ export default function WindowSound({
 			} else {
 				audioRef.current.pause();
 			}
+			audioRef.current.volume = state.music.volume / 100;
+			audioRef.current.muted = state.music.muted;
 		}
 
 		document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -37,7 +42,7 @@ export default function WindowSound({
 		return () => {
 			document.removeEventListener("visibilitychange", handleVisibilityChange);
 		};
-	}, [audioPlaying]);
+	}, [audioPlaying, state]);
 
 	return (
 		<div style={{ width: "100%", height: "100%" }} {...rest}>

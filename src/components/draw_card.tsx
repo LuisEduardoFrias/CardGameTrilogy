@@ -2,12 +2,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Card, { CardState } from "dm/card";
-import { GameState } from "cp/game";
-import Category from "dm/category";
-import Lever from "dm/lever";
-import CardSelector from "dm/card_selector";
-import Styles from "st/draw_card.module.css";
+import Card, { CardState } from "../domain/card";
+import CardSelector from "../domain/card_selector";
+import SoundClick from "./sound_click";
+import Category from "../domain/category";
+import Lever from "../domain/lever";
+import { GameState } from "./game";
+import Styles from "../styles/draw_card.module.css";
 
 export default function DrawCard({
 	level,
@@ -63,20 +64,22 @@ export default function DrawCard({
 	}
 
 	return (
-		<div
-			key={card.id}
-			style={_styles}
-			className={`${Styles.card} gold_metal`}
-			onClick={handleClick}>
-			<img
-				loading='lazy'
-				src={card.img_url}
-				className={Styles.img}
-				alt={card.name}
-				style={{
-					opacity: `${state === CardState.show ? "1" : "0"}`
-				}}
-			/>
-		</div>
+			<div
+				key={card.id}
+				style={_styles}
+				className={`${Styles.card} gold_metal`}
+				onClick={handleClick}>
+		<SoundClick src='./audios/card_up.mp3'>
+				<img
+					loading='lazy'
+					src={card.img_url}
+					className={Styles.img}
+					alt={card.name}
+					style={{
+						opacity: `${state === CardState.show ? "1" : "0"}`
+					}}
+				/>
+		</SoundClick>
+			</div>
 	);
 }

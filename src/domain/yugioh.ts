@@ -1,7 +1,7 @@
 /** @format */
 
-import Category from "dm/category";
-import Card from "dm/card";
+import Category from "./category";
+import Card from "./card";
 
 export default class Yugioh extends Category {
 	URL1: string =

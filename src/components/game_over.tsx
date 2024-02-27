@@ -1,10 +1,10 @@
 /** @format */
 "use client";
 
-import { GameState } from "cp/game";
-import Button from "cp/button";
-import Sound from "cp/sound";
-import Styles from "st/game_over.module.css";
+import { GameState } from "./game";
+import Button from "./button";
+import Sound from "./sound";
+import Styles from "../styles/game_over.module.css";
 
 export default function GameOver({
 	setGameState
@@ -16,7 +16,7 @@ export default function GameOver({
 	}
 
 	return (
-		<Sound src='gameover.mp3'>
+		<Sound src=' /audios/gameover.mp3'>
 			<div className={Styles.place}>
 				<span className={Styles.title}>Game Over</span>
 				<Button

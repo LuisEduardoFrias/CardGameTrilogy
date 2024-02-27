@@ -2,8 +2,8 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import { initialState, reducer } from "dm/sound";
-import useSuperState from "dm/use_super_state";
+import { initialState, reducer } from "../domain/audio";
+import useSuperState from "../domain/use_super_state";
 
 export default function Sound({
 	children,
@@ -16,11 +16,10 @@ export default function Sound({
 	const audioRef = useRef<HTMLAudioElement>(null);
 
 	useEffect(() => {
-		alert("componente sound");
 		if (audioRef.current) {
 			audioRef.current.play();
 			audioRef.current.volume = state.sound.volume / 100;
-			audioRef.current.muted = state.sound.desactivated;
+			audioRef.current.muted = state.sound.muted;
 		}
 	}, []);
 

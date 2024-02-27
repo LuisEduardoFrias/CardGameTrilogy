@@ -1,7 +1,7 @@
 /** @format */
 
-import Category from "dm/category";
-import Card from "dm/card";
+import Category from "./category";
+import Card from "./card";
 
 export default class Pokemon extends Category {
 	URL1: string = "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0";

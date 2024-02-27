@@ -2,21 +2,21 @@
 "use client";
 
 import React, { useState } from "react";
-import { CoreState } from "cp/core";
-import SelectCategoryCard from "cp/select_category_card";
-import WindowSound from "cp/window_sound";
-import LoadingTransition from "cp/loading_transition";
-import Button from "cp/button";
-import Category from "dm/category";
-import Yugioh from "dm/yugioh";
-import Pokemon from "dm/pokemon";
-import Digimon from "dm/digimon";
-import Styles from "st/menu.module.css";
+import { CoreState } from "./core";
+import SelectCategoryCard from "./select_category_card";
+import WindowSound from "./window_sound";
+import LoadingTransition from "./loading_transition";
+import Button from "./button";
+import Category from "../domain/category";
+import Yugioh from "../domain/yugioh";
+import Pokemon from "../domain/pokemon";
+import Digimon from "../domain/digimon";
+import Styles from "../styles/menu.module.css";
 
 const initCategory: Category[] = [
-	new Yugioh("yugioh.jpg"),
-	new Pokemon("pokemon.jpg"),
-	new Digimon("digimon.jpg")
+	new Yugioh("./images/yugioh.jpg"),
+	new Pokemon("./images/pokemon.jpg"),
+	new Digimon("./images/digimon.jpg")
 ];
 
 function cloneInitialState(): Category[] {
@@ -66,7 +66,7 @@ export default function Menu({
 	return (
 		<>
 			<LoadingTransition>
-				<WindowSound src='menu_music.mp3'>
+				<WindowSound src='./audios/menu_music.mp3'>
 					<div className={Styles.background}>
 						<div className={Styles.container}>
 							<span className={Styles.title}>Select categorys</span>

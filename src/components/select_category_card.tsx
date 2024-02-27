@@ -1,8 +1,8 @@
 /** @format */
 
-import Category from "md/category";
-import SoundClick from "cp/sound_click";
-import Styles from "st/menu.module.css";
+import Category from "../domain/category";
+import SoundClick from "./sound_click";
+import Styles from "../styles/menu.module.css";
 
 export default function SelectCategoryCard({
 	categorys,
@@ -32,7 +32,7 @@ export default function SelectCategoryCard({
 		<>
 			{categorys.map((cat: Category, index: number) => (
 				<div key={index} className={`${cat.animation}`}>
-					<SoundClick src='select_card.mp3'>
+					<SoundClick src='./audios/select_card.mp3'>
 						<div
 							key={index}
 							style={{ zIndex: "1" }}

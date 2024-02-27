@@ -1,7 +1,7 @@
 /** @format */
 
-import Category from "dm/category";
-import Card from "dm/card";
+import Category from "./category";
+import Card from "./card";
 
 export default class Digimon extends Category {
 	URL: string = "https://digimon-api.vercel.app/api/digimon";

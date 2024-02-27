@@ -1,22 +1,37 @@
 /** @format */
-"use client"
+"use client";
 
-import { GameState } from "cp/game";
-import Button from "cp/button";
-import Styles from "st/start.module.css";
+import { GameState } from "./game";
+import Button from "./button";
+import Styles from "../styles/start.module.css";
 
 export default function Start({
+	gameState,
 	setGameState
 }: {
+	gameState: GameState;
 	setGameState: (value: GameState) => void;
 }) {
-	function handleClick() {
-		setGameState(GameState.start);
-	}
-
 	return (
 		<div className={Styles.place}>
-			<Button onClick={handleClick} title="Start"/>
+			<Button
+				title={`${gameState === GameState.stop ? "Start" : "continue"}`}
+				onClick={() => {
+					setGameState(GameState.start);
+				}}
+			/>
+			<Button
+				title='menú'
+				onClick={() => {
+					setGameState(GameState.selectcategory);
+				}}
+			/>
+			<Button
+				title='settings'
+				onClick={() => {
+					setGameState(GameState.settings);
+				}}
+			/>
 		</div>
 	);
 }

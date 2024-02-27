@@ -2,24 +2,25 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { CoreState } from "cp/core";
-import LoadingTransition from "cp/loading_transition";
-import DraggableWindow from "cp/draggable_window";
-import MemorizedCards from "cp/memorized_cards";
-import Header from "cp/header";
-import DrawCard from "cp/draw_card";
-import CardSelector from "dm/card_selector";
-import GameOver from "cp/game_over";
-import Start from "cp/start";
-import Category from "dm/category";
-import Settings from "cp/settings";
-import Loading from "cp/loading";
-import Pause from "cp/pause";
-import Level from "dm/level";
-import NextLevel from "cp/next_level";
-import initializeLevel from "dm/initialize_level";
+import { CoreState } from "./core";
+import LoadingTransition from "./loading_transition";
+import WindowSound from "./window_sound";
+import MemorizedCards from "./memorized_cards";
+import Header from "./header";
+import DrawCard from "./draw_card";
+import CardSelector from "../domain/card_selector";
+import GameOver from "./game_over";
+import Start from "./start";
+import LoadingCards from "./loading_cards";
+import Category from "../domain/category";
+import Settings from "./settings";
+import Loading from "./loading";
+import Pause from "./pause";
+import Level from "../domain/level";
+import NextLevel from "./next_level";
+import initializeLevel from "../domain/initialize_level";
 
-import Styles from "st/game.module.css";
+import Styles from "../styles/game.module.css";
 
 export enum GameState {
 	start = "start",
@@ -43,14 +44,17 @@ export default function Game({
 	const [gameState, setGameState] = useState<GameState>(GameState.stop);
 	const [level, setLevel] = useState();
 	const { reset, select } = CardSelector();
+	const { isLoading, setIsLoading } = useState(false);
 
 	const execute: object = {
 		nextlevel: () => {
-			(async () => {
-				setLevel(await initializeLevel(category.clone(), level.level));
-			})();
-			reset();
+			setIsLoading(true);
 			setLevel(undefined);
+			reset();
+			(async () => {
+				setLevel(await initializeLevel(category.clone(), level.level + 1));
+				setIsLoading(false);
+			})();
 		},
 		selectcategory: () => {
 			setCoreState(CoreState.Menu);
@@ -79,10 +83,12 @@ export default function Game({
 		(execute[gameState] ?? execute["default"])();
 	}, [gameState]);
 
+	useEffect(() => {}, [isLoading]);
+
 	return (
 		<>
 			<LoadingTransition>
-				<DraggableWindow src='in_game.mp3'>
+				<WindowSound src='./audios/in_game.mp3'>
 					<div className={Styles.gameContainer}>
 						{level && (
 							<Header
@@ -93,11 +99,8 @@ export default function Game({
 							/>
 						)}
 
-						{gameState == GameState.stop && (
-							<Start setGameState={setGameState} />
-						)}
-						{gameState == GameState.pause && (
-							<Pause setGameState={setGameState} />
+						{(gameState == GameState.stop || gameState == GameState.pause) && (
+							<Start setGameState={setGameState} gameState={gameState} />
 						)}
 						{gameState == GameState.settings && (
 							<Settings setGameState={setGameState} />
@@ -105,6 +108,7 @@ export default function Game({
 						{gameState == GameState.gameover && (
 							<GameOver setGameState={setGameState} />
 						)}
+						{isLoading === true ? <LoadingCards /> : null}
 						{gameState == GameState.nextlevel && (
 							<NextLevel setGameState={setGameState} />
 						)}
@@ -122,7 +126,7 @@ export default function Game({
 							))}
 						</div>
 					</div>
-				</DraggableWindow>
+				</WindowSound>
 			</LoadingTransition>
 		</>
 	);

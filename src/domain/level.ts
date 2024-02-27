@@ -1,7 +1,7 @@
 /** @format */
 
-import Card from "dm/card";
-import Category from "dm/category";
+import Card from "./card";
+import Category from "./category";
 
 export default class Level {
 	level: number;

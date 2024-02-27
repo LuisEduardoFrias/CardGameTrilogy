@@ -1,10 +1,10 @@
 /** @format */
 
 import { useRef } from "react";
-import { GameState } from "cp/game";
-import Category from "dm/category";
-import initializeLevel from "dm/initialize_level";
-import Level from "dm/level";
+import { GameState } from "../components/game";
+import Category from "./category";
+import initializeLevel from "./initialize_level";
+import Level from "./level";
 
 type Find = {
 	key: string;
@@ -29,12 +29,12 @@ export default function CardSelector(): object {
 		category: Category
 	): undefined {
 		if (findsRef.current.length === level.category.cards?.length / 2) {
-			(async () => {
-				setLevel(await initializeLevel(category, level.level + 1));
-			})();
-
 			setGameState(GameState.nextlevel);
 			findsRef.current.splice(0);
+
+			(async () => {
+				//setLevel(await initializeLevel(category, level.level + 1));
+			})();
 
 			return undefined;
 		}

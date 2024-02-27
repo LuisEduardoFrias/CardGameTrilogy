@@ -1,16 +1,19 @@
 /** @format */
-import Button from "cp/button";
-import Styles from "st/settings.module.css";
-import { GameState } from "cp/game";
-import { initialState, reducer, Audio, Action } from "dm/sound";
-import useSuperState from "dm/use_super_state";
+import Button from "./button";
+import { GameState } from "./game";
+import { initialState, reducer, Audio, Action } from "../domain/audio";
+import useSuperState from "../domain/use_super_state";
+import Styles from "../styles/settings.module.css";
 
 export default function Settings({
 	setGameState
 }: {
 	setGameState: (value: GameState) => void;
 }) {
-	const [state, dispatch] = useSuperState(reducer, initialState, ["sound"]);
+	const [state, dispatch] = useSuperState(reducer, initialState, [
+		"sound",
+		"music"
+	]);
 
 	function setSound(callback: (audio: Audio) => void) {
 		dispatch({ type: Action.sound, value: callback(state.sound) });
@@ -24,15 +27,16 @@ export default function Settings({
 		const name = event.target.name;
 		const type = event.target.type;
 		const value = event.target.value;
+		const checked = event.target.checked;
 
 		if (type === "checkbox") {
 			if (name === "sound") {
 				setSound((prev: Audio) => {
-					return { ...prev, desactivated: value === "on" ? false : true };
+					return { ...prev, muted: !checked };
 				});
 			} else {
 				setMusic((prev: Audio) => {
-					return { ...prev, desactivated: value === "on" ? false : true };
+					return { ...prev, muted: !checked };
 				});
 			}
 		} else {
@@ -51,40 +55,47 @@ export default function Settings({
 	return (
 		<div className={Styles.setting}>
 			<div className={Styles.control}>
-				<label>Música 🔊</label>
+				<label className={Styles.label}>Música 🔊</label>
 				<input
+					className={Styles.input}
 					type='checkbox'
 					name='music'
-					defaultChecked
+					defaultChecked={!state.music.muted}
 					onChange={handleChange}
 				/>
 				<input
+					className={Styles.input}
 					type='range'
 					name='music'
-					min='0'
-					max='1'
+					min='10'
+					max='100'
 					step='0.1'
-					defaultValue='100'
+					defaultValue={state.music.volume}
 					onChange={handleChange}
 				/>
+
+				<span className={Styles.span}>{`${state.music.volume}%`}</span>
 			</div>
 			<div className={Styles.control}>
-				<label>Sonidos 🎶</label>
+				<label className={Styles.label}>Sonidos 🎶</label>
 				<input
+					className={Styles.input}
 					type='checkbox'
 					name='sound'
-					defaultChecked
+					defaultChecked={!state.sound.muted}
 					onChange={handleChange}
 				/>
 				<input
+					className={Styles.input}
 					type='range'
 					name='sound'
-					min='0'
-					max='1'
+					min='10'
+					max='100'
 					step='0.1'
-					defaultValue='100'
+					defaultValue={state.sound.volume}
 					onChange={handleChange}
 				/>
+				<span className={Styles.span}>{`${state.sound.volume}%`}</span>
 			</div>
 			<Button
 				title='🔙'

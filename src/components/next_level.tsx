@@ -1,10 +1,10 @@
 /** @format */
 "use client";
 
-import { GameState } from "cp/game";
-import Button from "cp/button";
-import Sound from "cp/sound";
-import Styles from "st/nextlevel.module.css";
+import { GameState } from "./game";
+import Button from "./button";
+import Sound from "./sound";
+import Styles from "../styles/nextlevel.module.css";
 
 export default function NextLevel({
 	setGameState
@@ -16,7 +16,7 @@ export default function NextLevel({
 	}
 
 	return (
-		<Sound src='nextlever.mp3'>
+		<Sound src='./audios/nextlever.mp3'>
 			<div className={Styles.place}>
 				<span className={Styles.title}>Next Level</span>
 				<Button onClick={handleClick} title='Start' />

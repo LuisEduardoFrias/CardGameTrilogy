@@ -1,12 +1,12 @@
 /** @format */
 "use client";
 
-import { GameState } from "cp/game";
-import Timer from "cp/timer";
-import Button from "cp/button";
-import Level from "dm/level";
+import { GameState } from "./game";
+import Timer from "./timer";
+import Button from "./button";
+import Level from "../domain/level";
 
-import Styles from "st/game.module.css";
+import Styles from "../styles/game.module.css";
 
 export default function Header({
 	level,
