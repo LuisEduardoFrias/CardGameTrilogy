@@ -43,8 +43,8 @@ export default function Game({
 	//
 	const [gameState, setGameState] = useState<GameState>(GameState.stop);
 	const [level, setLevel] = useState();
+	const [isLoading, setIsLoading] = useState(false);
 	const { reset, select } = CardSelector();
-	const { isLoading, setIsLoading } = useState(false);
 
 	const execute: object = {
 		nextlevel: () => {
@@ -53,7 +53,6 @@ export default function Game({
 			reset();
 			(async () => {
 				setLevel(await initializeLevel(category.clone(), level.level + 1));
-				setIsLoading(false);
 			})();
 		},
 		selectcategory: () => {
@@ -81,9 +80,8 @@ export default function Game({
 
 	useEffect(() => {
 		(execute[gameState] ?? execute["default"])();
+		setIsLoading(false);
 	}, [gameState]);
-
-	useEffect(() => {}, [isLoading]);
 
 	return (
 		<>
@@ -108,7 +106,7 @@ export default function Game({
 						{gameState == GameState.gameover && (
 							<GameOver setGameState={setGameState} />
 						)}
-						{isLoading === true ? <LoadingCards /> : null}
+						{isLoading && <LoadingCards />}
 						{gameState == GameState.nextlevel && (
 							<NextLevel setGameState={setGameState} />
 						)}
