@@ -29,15 +29,12 @@ export default function CardSelector(): object {
 		category: Category
 	): undefined {
 		if (findsRef.current.length === level.category.cards?.length / 2) {
-			setGameState(GameState.nextlevel);
 			findsRef.current.splice(0);
-
-			(async () => {
-				//setLevel(await initializeLevel(category, level.level + 1));
-			})();
+			setGameState(GameState.nextlevel);
 
 			return undefined;
 		}
+
 		const indexkey = findsRef.current.findIndex(
 			(find: Find) => find.key === cardId
 		);

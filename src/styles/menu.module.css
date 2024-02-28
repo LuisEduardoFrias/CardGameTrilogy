@@ -1,10 +1,25 @@
 /** @format */
 
+.background {
+	opacity: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	background-image: url("../public/images/egipcio.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	box-shadow: inset 0 0 500px 50px black;
+}
+
 .container {
 	width: 100%;
 	height: 100%;
-	padding: 20px;
 	box-sizing: border-box;
+	padding: 20px;
 
 	display: flex;
 	flex-direction: column;
@@ -17,6 +32,7 @@
 	color: #0303ce;
 	text-shadow: 1px 1px 5px #fceb9cfd;
 	font-size: 35px;
+	z-index: 1;
 	font-weight: 900;
 }
 
@@ -24,13 +40,15 @@
 	width: 100%;
 	height: auto;
 	perspective: 500px;
-	
+
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
 }
+
+/******** SelectCategoryCard **********/
 
 .cardOption {
 	width: 100px;
@@ -71,46 +89,4 @@
 
 .img:active {
 	transform: scale(0.9);
-}
-
-.background {
-	opacity: 1;
-	position: absolute;
-	z-index: 0;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 100%;
-	height: 100%;
-	background-image: url("../public/images/egipcio.jpg");
-	background-repeat: repeat;
-	box-shadow: inset 0 0 500px 50px black;
-	animation: movhe 10s linear infinite;
-}
-
-@keyframes move {
-	0% {
-		transform: translate(-50%, -50%);
-	}
-	10% {
-		transform: translate(-40%, -40%);
-	}
-	20% {
-		transform: translate(-30%, -30%);
-	}
-	35% {
-		transform: translate(-20%, -20%);
-	}
-	50% {
-		transform: translate(-30%, -30%);
-	}
-	60% {
-		transform: translate(-40%, -40%);
-	}
-	70% {
-		transform: translate(-50%, -50%);
-	}
-	80% {
-		transform: translate(-60%, -60%);
-	}
 }

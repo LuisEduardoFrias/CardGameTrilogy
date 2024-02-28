@@ -14,8 +14,8 @@ export default function Header({
 	gameState,
 	setGameState
 }: {
-	level: string,
-	time:string,
+	level: string;
+	time: number;
 	gameState: GameState;
 	setGameState: (value: GameState) => void;
 }) {
@@ -27,11 +27,13 @@ export default function Header({
 			<div className={Styles.timerLevel}>
 				<span className={Styles.textLevel}>{`Level: ${level + 1}`}</span>
 				<Timer
+					key='time'
 					time={time}
 					gameState={gameState}
 					setGameState={setGameState}
 				/>
 				<Button
+					key='button'
 					className='option-btn'
 					title='☰'
 					textClass='option-span'

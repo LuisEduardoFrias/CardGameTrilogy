@@ -45,25 +45,27 @@ export default function Game({
 	const [level, setLevel] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 	const { reset, select } = CardSelector();
+	const [uniqueId, setUniqueId] = useState(0);
 
 	const execute: object = {
 		nextlevel: () => {
 			setIsLoading(true);
-			setLevel(undefined);
-			reset();
 			(async () => {
+				getUniqueId();
 				setLevel(await initializeLevel(category.clone(), level.level + 1));
+				setIsLoading(false);
 			})();
 		},
 		selectcategory: () => {
 			setCoreState(CoreState.Menu);
 			setGameState(GameState.stop);
+			setUniqueId(0);
 			reset();
 			setLevel(undefined);
 		},
 		restart: () => {
-			setLevel(undefined);
 			setGameState(GameState.stop);
+			getUniqueId();
 			reset();
 			(async () => {
 				setLevel(await initializeLevel(category.clone()));
@@ -73,6 +75,10 @@ export default function Game({
 	};
 
 	useEffect(() => {
+		console.log("level: " + JSON.stringify(level, null, 2));
+	}, [level]);
+
+	useEffect(() => {
 		(async () => {
 			setLevel(await initializeLevel(category.clone()));
 		})();
@@ -80,22 +86,32 @@ export default function Game({
 
 	useEffect(() => {
 		(execute[gameState] ?? execute["default"])();
-		setIsLoading(false);
 	}, [gameState]);
+
+	function random() {
+		return Math.floor(Math.random() * 10) + 1;
+	}
+
+	function getUniqueId(): void {
+		const _random = random();
+
+		if (_random === uniqueId) setUniqueId(getUniqueId());
+
+		setUniqueId(_random);
+	}
 
 	return (
 		<>
 			<LoadingTransition>
 				<WindowSound src='./audios/in_game.mp3'>
 					<div className={Styles.gameContainer}>
-						{level && (
-							<Header
-								level={level.level}
-								time={level.time}
-								gameState={gameState}
-								setGameState={setGameState}
-							/>
-						)}
+						<Header
+							key={level?.time}
+							level={level?.level}
+							time={level?.time}
+							gameState={gameState}
+							setGameState={setGameState}
+						/>
 
 						{(gameState == GameState.stop || gameState == GameState.pause) && (
 							<Start setGameState={setGameState} gameState={gameState} />
@@ -113,7 +129,7 @@ export default function Game({
 						<div className={`${Styles.containerCards} ligth_border`}>
 							{level?.category?.cards?.map((card: Card, index: number) => (
 								<DrawCard
-									key={index}
+									key={`${index}-${uniqueId}`}
 									level={level}
 									card={card}
 									setLevel={setLevel}

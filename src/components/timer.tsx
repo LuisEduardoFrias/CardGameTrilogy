@@ -34,9 +34,16 @@ export default function Timer({
 	}, [timer, gameState]);
 
 	useEffect(() => {
-		if (gameState != GameState.pause && gameState != GameState.start && gameState != GameState.settings)
+		if (
+			gameState != GameState.pause &&
+			gameState != GameState.start &&
+			gameState != GameState.settings
+		) {
 			setTimer(time);
+		}
 	}, [gameState]);
 
-	return <span className={Styles.timer}>{`Time: ${timer} seconds`}</span>;
+	return (
+		<span className={Styles.timer}>{`Time: ${timer} seconds`}</span>
+	);
 }

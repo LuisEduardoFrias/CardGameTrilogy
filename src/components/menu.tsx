@@ -68,6 +68,7 @@ export default function Menu({
 			<LoadingTransition>
 				<WindowSound src='./audios/menu_music.mp3'>
 					<div className={Styles.background}>
+					</div>
 						<div className={Styles.container}>
 							<span className={Styles.title}>Select categorys</span>
 							<div className={Styles.containerCategory}>
@@ -83,7 +84,6 @@ export default function Menu({
 								title='Start'
 							/>
 						</div>
-					</div>
 				</WindowSound>
 			</LoadingTransition>
 		</>

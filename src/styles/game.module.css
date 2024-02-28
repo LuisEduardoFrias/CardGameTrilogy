@@ -5,16 +5,19 @@
 }
 
 .containerCards {
-	margin-top: 10px;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	gap: 20px;
 	width: 100%;
 	height: 100%;
 	padding: 20px;
 	box-sizing: border-box;
 	perspective: 10000px;
+	margin-top: 10px;
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 20px;
 }
 
 .header {

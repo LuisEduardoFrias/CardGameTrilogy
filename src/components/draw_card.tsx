@@ -64,12 +64,12 @@ export default function DrawCard({
 	}
 
 	return (
-			<div
-				key={card.id}
-				style={_styles}
-				className={`${Styles.card} gold_metal`}
-				onClick={handleClick}>
-		<SoundClick src='./audios/card_up.mp3'>
+		<div
+			key={card.id}
+			style={_styles}
+			className={`${Styles.card} gold_metal`}
+			onClick={handleClick}>
+			<SoundClick src='./audios/card_up.mp3'>
 				<img
 					loading='lazy'
 					src={card.img_url}
@@ -79,7 +79,7 @@ export default function DrawCard({
 						opacity: `${state === CardState.show ? "1" : "0"}`
 					}}
 				/>
-		</SoundClick>
-			</div>
+			</SoundClick>
+		</div>
 	);
 }

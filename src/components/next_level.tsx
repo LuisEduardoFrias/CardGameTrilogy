@@ -7,7 +7,7 @@ import Sound from "./sound";
 import Styles from "../styles/nextlevel.module.css";
 
 export default function NextLevel({
-	setGameState
+	setGameState,
 }: {
 	setGameState: (value: GameState) => void;
 }) {
